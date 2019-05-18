@@ -1,8 +1,8 @@
-import React from 'react';
-import logo from './logo.svg';
-import { getOrderBook, fetchMarkets } from './services/cybex';
-
-import './App.css';
+import React from "react";
+import logo from "./logo.svg";
+import { getOrderBook, fetchMarkets } from "./services/cybex";
+import OrderOverview from "./OrderOverview";
+import "./App.css";
 import Login from './login';
 
 class App extends React.Component {
@@ -24,8 +24,9 @@ class App extends React.Component {
   }
 
   render() {
-    const { isAuthorized, data } = this.state;
-    return <>{!isAuthorized ? <Login /> : <div className="app" />}</>;
+    const { isAuthorized, data, markets } = this.state;
+    console.log(data);
+    return <>{!isAuthorized ? <Login /> : <OrderOverview price={162} amount={2} />}</>;
   }
 }
 
