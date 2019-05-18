@@ -12,7 +12,7 @@ class App extends React.Component {
     this.state = {
       markets: [],
       data: null,
-      isAuthorized: false,
+      isAuthorized: true,
       fetching: false
     };
   }

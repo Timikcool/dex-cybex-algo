@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import {sellAlgoOrder} from "../services/cybex";
 
 import "./OrderOverview.css";
 
@@ -7,12 +8,19 @@ class OrderOverview extends Component {
     super(props);
     const { amount, price } = props;
     this.state = {
+      assetPair: "ARENA.ETH/ARENA.USDT",
       amount,
       price,
       total: props.amount * props.price
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSellAlgoOrder = this.handleSellAlgoOrder.bind(this);
+  }
+
+  handleSellAlgoOrder() {
+    console.log("Called handleSellAlgoOrder")
+    sellAlgoOrder(this.state.assetPair, this.state.amount, this.state.price, 10)
   }
 
   handleInputChange(e) {
@@ -57,7 +65,9 @@ class OrderOverview extends Component {
             onChange={this.handleInputChange}
           />
         </div>
+
         <br />
+
         <div className="input-wrapper">
           <span> Total </span>
           <input
@@ -67,9 +77,11 @@ class OrderOverview extends Component {
             onChange={this.handleInputChange}
           />
         </div>
+
         <br />
+
         <button>Buy</button>
-        <button>Sell</button>
+        <button onClick={this.handleSellAlgoOrder}>Sell</button>
       </div>
     );
   }

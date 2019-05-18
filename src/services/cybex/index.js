@@ -1,7 +1,10 @@
 import Cybex from "romejs";
 import dotenv from "dotenv";
+import { doWhileStatement } from "@babel/types";
 
-dotenv.config();
+// dotenv.config();
+
+
 
 export const fetchMarkets = async () => {
   const cybex = new Cybex();
@@ -19,7 +22,7 @@ export const getOrderBook = async () => {
   const olhcv = await cybex.fetchOHLCV(assetPair);
   console.log(olhcv);
 
-  const balance = await cybex.fetchBalance("paul-1");
+  const balance = await cybex.fetchBalance(process.env.accountName);
   console.log(balance);
 
   const pubTrades = await cybex.fetchTrades(assetPair, true, 5);
@@ -32,3 +35,21 @@ export const getOrderBook = async () => {
   const res = await cybex.createMarketBuyOrder(assetPair, 0.001);
   console.log(res);
 };
+
+
+export const sellAlgoOrder = async (assetPair, amount, price, numChunks) => {
+  console.log("ENV", process.env.accountName, process.env.password)
+  const cybex = new Cybex();
+
+  await cybex.setSigner({
+    accountName: process.env.accountName,
+    password: process.env.password
+  });
+
+  for (var i = 0; i < numChunks; i++) {
+    const res = await cybex.createLimitSellOrder(assetPair, amount/ numChunks, price)
+    console.log(res)
+  }
+
+}
+
