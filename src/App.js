@@ -23,7 +23,7 @@ class App extends React.Component {
   render() {
     const { markets, data } = this.state;
     console.log(data);
-    return <OrderOverview price={162} amount={2} />;
+    return <OrderOverview price={162} amount={2} tradingPair={"ETH/USTD"} />;
   }
 }
 

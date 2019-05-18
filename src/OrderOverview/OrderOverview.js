@@ -7,8 +7,8 @@ class OrderOverview extends Component {
     super(props);
     const { amount, price } = props;
     this.state = {
-      amount: amount,
-      price: price,
+      amount,
+      price,
       total: props.amount * props.price
     };
 
@@ -36,7 +36,8 @@ class OrderOverview extends Component {
     const { price, amount, total } = this.state;
 
     return (
-      <div>
+      <div className="order-input-wrapper">
+        <h1> Buy and Sell</h1>
         <div className="input-wrapper">
           <span> Price </span>
           <input
@@ -66,6 +67,7 @@ class OrderOverview extends Component {
             onChange={this.handleInputChange}
           />
         </div>
+        <br />
         <button>Buy</button>
         <button>Sell</button>
       </div>
