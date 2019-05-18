@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron": "nodemon --exec \"react-scripts build && electron .\""
+    "electron": "react-scripts build && electron ."
   },
   "main": "electron-starter.js",
   "homepage": "./",
