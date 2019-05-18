@@ -32,7 +32,7 @@ class App extends React.Component {
     console.log(data);
     return (
       <>
-        {!isAuthorized ? <Login /> : <OrderOverview price={162} amount={2} />}
+        {!isAuthorized ? <Login authCallback={this.auth} /> : <OrderOverview price={162} amount={2} />}
       </>
     );
   }

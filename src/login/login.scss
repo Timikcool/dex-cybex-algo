@@ -1,3 +1,11 @@
+.login-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+        
+}
 .login {
   display: flex;
   flex-direction: column;
@@ -7,6 +15,8 @@
   background: #1b2230;
   border-radius: 14px;
   color: white;
+  height: 300px;
+    justify-content: space-evenly;
   h5 {
     margin: 15px;
   }
@@ -26,9 +36,19 @@
     border: none;
     margin: 0 auto;
     width: 50%;
-  }
-  button[disabed] {
-    background-color: rgba(120, 129, 154, 0.3) !important;
-    background-image: none !important;
+    padding: 10px;
+    transition: all .3s cubic-bezier(.25,.8,.5,1);
+    &:disabled,
+    &[disabled] {
+      background-color: rgba(120, 129, 154, 0.3) !important;
+      background-image: none !important;
+      color:rgba(120, 129, 154, 0.7) 
+    }
+    &:hover {
+        cursor: pointer;
+    }
+    &:focus {
+        outline: none;
+    }
   }
 }
