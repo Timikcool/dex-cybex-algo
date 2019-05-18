@@ -1,7 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import { getOrderBook, fetchMarkets } from "./services/cybex";
-
+import OrderOverview from "./OrderOverview";
 import "./App.css";
 
 class App extends React.Component {
@@ -23,13 +23,7 @@ class App extends React.Component {
   render() {
     const { markets, data } = this.state;
     console.log(data);
-    return (
-      <>
-        {markets.map(market => (
-          <div>{market.name}</div>
-        ))}
-      </>
-    );
+    return <OrderOverview />;
   }
 }
 
