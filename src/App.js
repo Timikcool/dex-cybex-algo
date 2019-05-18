@@ -1,8 +1,9 @@
-import React from "react";
-import logo from "./logo.svg";
-import { getOrderBook, fetchMarkets } from "./services/cybex";
+import React from 'react';
+import logo from './logo.svg';
+import { getOrderBook, fetchMarkets } from './services/cybex';
 
-import "./App.css";
+import './App.css';
+import Login from './login';
 
 class App extends React.Component {
   constructor(props) {
@@ -10,26 +11,21 @@ class App extends React.Component {
 
     this.state = {
       markets: [],
-      data: null
+      data: null,
+      isAuthorized: false,
+      fetching: false
     };
   }
 
   async componentDidMount() {
     //const orderBook = await getOrderBook("ETH/USDT");
-    const markets = await fetchMarkets();
-    this.setState({ markets });
+    // const markets = await fetchMarkets();
+    // this.setState({ markets });
   }
 
   render() {
-    const { markets, data } = this.state;
-    console.log(data);
-    return (
-      <>
-        {markets.map(market => (
-          <div>{market.name}</div>
-        ))}
-      </>
-    );
+    const { isAuthorized, data } = this.state;
+    return <>{!isAuthorized ? <Login /> : <div className="app" />}</>;
   }
 }
 
