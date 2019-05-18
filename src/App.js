@@ -12,12 +12,19 @@ class App extends React.Component {
     this.state = {
       markets: [],
       data: null,
-      isAuthorized: true,
+      isAuthorized: false,
       fetching: false
     };
   }
 
   auth = (username, password) => {
+    this.setState({
+      user: {
+        username,
+        password
+      },
+      isAuthorized: true
+    })
     console.log(username, password);
   }
 
@@ -28,11 +35,11 @@ class App extends React.Component {
   }
 
   render() {
-    const { isAuthorized, data, markets } = this.state;
+    const { isAuthorized, data, markets, user } = this.state;
     console.log(data);
     return (
       <>
-        {!isAuthorized ? <Login authCallback={this.auth} /> : <OrderOverview price={162} amount={2} />}
+        {!isAuthorized ? <Login authCallback={this.auth} /> : <OrderOverview price={162} amount={2} user={user} />}
       </>
     );
   }

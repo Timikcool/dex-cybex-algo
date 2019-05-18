@@ -20,7 +20,7 @@ class OrderOverview extends Component {
 
   handleSellAlgoOrder() {
     console.log("Called handleSellAlgoOrder")
-    sellAlgoOrder(this.state.assetPair, this.state.amount, this.state.price, 10)
+    sellAlgoOrder(this.state.assetPair, this.state.amount, this.state.price, 10, this.props.user)
   }
 
   handleInputChange(e) {
