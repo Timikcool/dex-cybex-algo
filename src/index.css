@@ -7,6 +7,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: url(./assets/bg.jpg) 50% repeat-y;
   background-size: cover;
+  height: 100%;
+}
+#root, html {
+  height: 100%;
 }
 
 code {
