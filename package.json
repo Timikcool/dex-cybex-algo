@@ -10,7 +10,7 @@
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
-    "romejs": "^1.0.2",
+    "romejs": "git+https://github.com/CybexDex/romejs",
     "socket.io-client": "^2.2.0",
     "websocket": "^1.0.28"
   },
@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "electron": "react-scripts build && electron ."
+    "electron": "nodemon --exec \"react-scripts build && electron .\""
   },
   "main": "electron-starter.js",
   "homepage": "./",
