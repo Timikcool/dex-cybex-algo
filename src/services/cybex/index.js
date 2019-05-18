@@ -47,13 +47,11 @@ export const sellAlgoOrder = async (assetPair, amount, price, numChunks, user) =
   });
 
   console.log("Response after signing:", res)
-setTimeout(async()=> {
+
   for (var i = 0; i < numChunks; i++) {
     const res = await cybex.createLimitSellOrder(assetPair, amount / numChunks, price)
     console.log(res)
   }
-},5000)
-
 
 }
 
