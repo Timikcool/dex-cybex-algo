@@ -3,7 +3,7 @@ import logo from "./logo.svg";
 import { getOrderBook, fetchMarkets } from "./services/cybex";
 import OrderOverview from "./OrderOverview";
 import "./App.css";
-import Login from './login';
+import Login from "./login";
 
 class App extends React.Component {
   constructor(props) {
@@ -30,7 +30,11 @@ class App extends React.Component {
   render() {
     const { isAuthorized, data, markets } = this.state;
     console.log(data);
-    return <>{!isAuthorized ? <Login authCallback={this.auth} /> : <OrderOverview price={162} amount={2} />}</>;
+    return (
+      <>
+        {!isAuthorized ? <Login /> : <OrderOverview price={162} amount={2} />}
+      </>
+    );
   }
 }
 
