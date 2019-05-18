@@ -3,6 +3,7 @@ import logo from "./logo.svg";
 import { getOrderBook, fetchMarkets } from "./services/cybex";
 import OrderOverview from "./OrderOverview";
 import "./App.css";
+import Login from "./login";
 
 class App extends React.Component {
   constructor(props) {
@@ -10,20 +11,26 @@ class App extends React.Component {
 
     this.state = {
       markets: [],
-      data: null
+      data: null,
+      isAuthorized: false,
+      fetching: false
     };
   }
 
   async componentDidMount() {
     //const orderBook = await getOrderBook("ETH/USDT");
-    const markets = await fetchMarkets();
-    this.setState({ markets });
+    // const markets = await fetchMarkets();
+    // this.setState({ markets });
   }
 
   render() {
-    const { markets, data } = this.state;
+    const { isAuthorized, data, markets } = this.state;
     console.log(data);
-    return <OrderOverview price={162} amount={2} tradingPair={"ETH/USTD"} />;
+    return (
+      <>
+        {!isAuthorized ? <Login /> : <OrderOverview price={162} amount={2} />}
+      </>
+    );
   }
 }
 

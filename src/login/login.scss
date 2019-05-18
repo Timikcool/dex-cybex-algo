@@ -1,0 +1,16 @@
+.login {
+    display: flex;
+    flex-direction: column;
+    min-width: 800px;
+    width: 70%;
+    margin: 0 auto;
+    background: #1b2230;
+    border-radius: 14px;
+    color: white;
+    input {
+        background: #212939!important;
+        border: none;
+        outline: none;
+        color: white;
+    }
+}
