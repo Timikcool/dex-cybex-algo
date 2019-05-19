@@ -25,6 +25,7 @@ class App extends React.Component {
       },
       isAuthorized: true
     })
+    localStorage.setItem('_cybex_dex_user', JSON.stringify({username, password}));
     console.log(username, password);
   }
 
@@ -32,6 +33,13 @@ class App extends React.Component {
     //const orderBook = await getOrderBook("ETH/USDT");
     // const markets = await fetchMarkets();
     // this.setState({ markets });
+    if (localStorage.getItem('_cybex_dex_user')) {
+      const user = JSON.parse(localStorage.getItem('_cybex_dex_user'));
+      this.setState({
+        user,
+        isAuthorized: true
+      })
+    }
   }
 
   render() {
