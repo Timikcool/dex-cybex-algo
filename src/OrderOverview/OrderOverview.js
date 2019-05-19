@@ -41,7 +41,8 @@ class OrderOverview extends Component {
           total: '',
           isSendingTx: false,
           numChunks: 10,
-          txSent: 0
+          txSent: 0,
+          numMaxOpenOrders: 1
         })
       }
     });
@@ -145,6 +146,7 @@ class OrderOverview extends Component {
       isSendingTx,
       txSent,
       numChunks,
+      numMaxOpenOrders,
       assetPair,
     } = this.state
 
@@ -185,6 +187,16 @@ class OrderOverview extends Component {
               />
             }
             {/* <span> Price </span> */}
+          </div>
+
+          <div className="input-wrapper">
+            <input
+              type="number"
+              name="numMaxOpenOrders"
+              value={numMaxOpenOrders}
+              placeholder="Max Open Orders"
+              onChange={this.handleInputChange}
+            />
           </div>
 
           <div className="input-wrapper">

@@ -122,7 +122,7 @@ export const shouldGenerateNewPosition = async (assetPair, numMaxOpenOrders, use
   const cybex = new Cybex();
 
   toleratedPriceDifference = 10
-  numMaxOpenOrders = 5
+  // numMaxOpenOrders = 5
 
   const res = await cybex.setSigner({
     accountName: user.username,
