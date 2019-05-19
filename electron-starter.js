@@ -1,11 +1,9 @@
-const dotenv = require('dotenv')
+const dotenv = require("dotenv");
 
-dotenv.config()
+dotenv.config();
 
 // Modules to control application life and create native browser window
 const { app, BrowserWindow } = require("electron");
-
-
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -20,6 +18,8 @@ function createWindow() {
       nodeIntegration: true
     }
   });
+
+  mainWindow.maximize();
 
   // and load the index.html of the app.
   mainWindow.loadFile("build/index.html");

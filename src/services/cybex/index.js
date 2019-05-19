@@ -62,7 +62,6 @@ export const sellAlgoOrder = async (
     .catch(err => {
       console.log("ERROR signing:", err);
       if (err.message === "You need to provide credentials for signing") {
-        console.log(err.message);
         logout();
       }
     });
