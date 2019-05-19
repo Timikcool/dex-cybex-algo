@@ -50,7 +50,7 @@ export const sellAlgoOrder = async (
         const res = await cybex.createLimitSellOrder(
           assetPair,
           amount / numChunks,
-          price + i
+          price
         );
         console.log(res);
       }
@@ -78,7 +78,10 @@ export const buyAlgoOrder = async (
           amount / numChunks,
           price
         );
-        console.log(res);
+        console.log(res.Status);
+        if (res.Status === "Failed") {
+          i--;
+        }
       }
     })
     .catch(err => {
