@@ -4,6 +4,7 @@ import { getOrderBook, fetchMarkets } from "./services/cybex";
 import OrderOverview from "./OrderOverview";
 import "./App.css";
 import Login from "./login";
+import Cybex from "romejs";
 
 class App extends React.Component {
   constructor(props) {
@@ -18,27 +19,40 @@ class App extends React.Component {
   }
 
   auth = (username, password) => {
-    this.setState({
-      user: {
-        username,
-        password
-      },
-      isAuthorized: true
-    })
-    localStorage.setItem('_cybex_dex_user', JSON.stringify({username, password}));
-    console.log(username, password);
-  }
+    try {
+      const cybex = new Cybex();
+      await cybex.setSigner({ accountName: username, password: password });
+      this.setState({
+        user: {
+          username,
+          password
+        },
+        isAuthorized: true
+      });
+      localStorage.setItem(
+        "_cybex_dex_user",
+        JSON.stringify({ username, password })
+      );
+      console.log(username, password);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  logout = () => {
+    this.setState({ isAuthorized: false });
+  };
 
   async componentDidMount() {
     //const orderBook = await getOrderBook("ETH/USDT");
     // const markets = await fetchMarkets();
     // this.setState({ markets });
-    if (localStorage.getItem('_cybex_dex_user')) {
-      const user = JSON.parse(localStorage.getItem('_cybex_dex_user'));
+    if (localStorage.getItem("_cybex_dex_user")) {
+      const user = JSON.parse(localStorage.getItem("_cybex_dex_user"));
       this.setState({
         user,
         isAuthorized: true
-      })
+      });
     }
   }
 
@@ -47,7 +61,16 @@ class App extends React.Component {
     console.log(data);
     return (
       <>
-        {!isAuthorized ? <Login authCallback={this.auth} /> : <OrderOverview price={162} amount={2} user={user} />}
+        {!isAuthorized ? (
+          <Login authCallback={this.auth} />
+        ) : (
+          <OrderOverview
+            price={162}
+            amount={2}
+            user={user}
+            onLogout={this.logout}
+          />
+        )}
       </>
     );
   }

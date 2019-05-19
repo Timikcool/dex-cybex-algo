@@ -11,7 +11,7 @@ class OrderOverview extends Component {
     super(props);
     const { amount, price, user } = props;
     this.state = {
-      assetPair: 'ARENA.ETH/ARENA.USDT',
+      assetPair: "ARENA.ETH/ARENA.USDT",
       amount,
       price,
       markets: [],
@@ -32,28 +32,31 @@ class OrderOverview extends Component {
   }
   handleAlgoOrder(type) {
     this.openModal();
-    switch (type) {
-      case 'sell':
-        sellAlgoOrder(
-          this.state.assetPair,
-          this.state.amount,
-          this.state.price,
-          10,
-          this.props.user
-        );
-      case 'buy':
-        buyAlgoOrder(
-          this.state.assetPair,
-          this.state.amount,
-          this.state.price,
-          10,
-          this.props.user
-        );
-      default:
+    try {
+      switch (type) {
+        case "sell":
+          sellAlgoOrder(
+            this.state.assetPair,
+            this.state.amount,
+            this.state.price,
+            10,
+            this.props.user
+          );
+        case "buy":
+          buyAlgoOrder(
+            this.state.assetPair,
+            this.state.amount,
+            this.state.price,
+            10,
+            this.props.user
+          );
+        default:
+      }
+    } catch (err) {
+      console.log(err);
+      this.props.onLogout();
     }
   }
-
-  tx
   openModal() {
     this.setState({ isSendingTx: true });
   }
@@ -71,13 +74,13 @@ class OrderOverview extends Component {
     const { name, value } = e.target;
     const { amount, price, total } = this.state;
     const newState = { [name]: parseFloat(value) };
-    if (name === 'price') {
+    if (name === "price") {
       newState.total = value * amount;
     }
-    if (name === 'total') {
+    if (name === "total") {
       newState.price = amount / total;
     }
-    if (name === 'amount') {
+    if (name === "amount") {
       newState.total = value * price;
     }
 
@@ -169,13 +172,13 @@ class OrderOverview extends Component {
           <div className="actions">
             <button
               className="buy-btn"
-              onClick={() => this.handleAlgoOrder('buy')}
+              onClick={() => this.handleAlgoOrder("buy")}
             >
               Buy
             </button>
             <button
               className="sell-btn"
-              onClick={() => this.handleAlgoOrder('sell')}
+              onClick={() => this.handleAlgoOrder("sell")}
             >
               Sell
             </button>
