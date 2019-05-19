@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { sellAlgoOrder, buyAlgoOrder } from "../services/cybex";
+import React, { Component } from 'react';
+import { sellAlgoOrder, buyAlgoOrder, fetchMarkets } from '../services/cybex';
 
 import './OrderOverview.scss';
 import ReactDropdown from 'react-dropdown';
@@ -21,7 +21,7 @@ class OrderOverview extends Component {
 
   handleAlgoOrder(type) {
     switch (type) {
-      case "sell":
+      case 'sell':
         sellAlgoOrder(
           this.state.assetPair,
           this.state.amount,
@@ -29,7 +29,7 @@ class OrderOverview extends Component {
           10,
           this.props.user
         );
-      case "buy":
+      case 'buy':
         buyAlgoOrder(
           this.state.assetPair,
           this.state.amount,
@@ -60,8 +60,9 @@ class OrderOverview extends Component {
 
   async componentDidMount() {
     //const orderBook = await getOrderBook("ETH/USDT");
-    // const markets = await fetchMarkets();
-    this.setState({ markets:[{name:'ETH/BNC'}, {name:'LTC/NGR'}] });
+     const markets = await fetchMarkets();
+    // this.setState({ markets: [{ name: 'ETH/BNC' }, { name: 'LTC/NGR' }] });
+    this.setState({markets});
     // console.log(markets);
   }
 
@@ -80,20 +81,24 @@ class OrderOverview extends Component {
                 placeholder="Select trade pair"
               />
             )}
-            <span> Price </span>
+            {/* <span> Price </span> */}
+          </div>
+          <div className="input-wrapper">
             <input
               type="number"
               name="price"
               value={price}
+              placeholder="Price"
               onChange={this.handleInputChange}
             />
           </div>
           <br />
           <div className="input-wrapper">
-            <span> Amount </span>
+            {/* <span> Amount </span> */}
             <input
               type="number"
               name="amount"
+              placeholder="Amount"
               value={amount}
               onChange={this.handleInputChange}
             />
@@ -102,20 +107,33 @@ class OrderOverview extends Component {
           <br />
 
           <div className="input-wrapper">
-            <span> Total </span>
+            {/* <span> Total </span> */}
             <input
               type="number"
               name="total"
               value={total}
+              placeholder="Total"
               onChange={this.handleInputChange}
             />
           </div>
 
           <br />
 
-        <button onClick={() => this.handleAlgoOrder("buy")}>Buy</button>
-        <button onClick={() => this.handleAlgoOrder("sell")}>Sell</button>
-      </div>
+          <div className="actions">
+            <button
+              className="buy-btn"
+              onClick={() => this.handleAlgoOrder('buy')}
+            >
+              Buy
+            </button>
+            <button
+              className="sell-btn"
+              onClick={() => this.handleAlgoOrder('sell')}
+            >
+              Sell
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
