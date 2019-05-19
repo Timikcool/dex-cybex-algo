@@ -18,37 +18,62 @@ class OrderOverview extends Component {
       total: props.amount * props.price,
       isSendingTx: false,
       numChunks: 10,
-      txSent: 0,
-    }
-    document.title = document.title + ` | ${user.username}`
-    this.handleInputChange = this.handleInputChange.bind(this)
-    this.openModal = this.openModal.bind(this)
-    this.afterOpenModal = this.afterOpenModal.bind(this)
-    this.closeModal = this.closeModal.bind(this)
+      txSent: 0
+    };
+    document.title = document.title + ` | ${user.username}`;
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.openModal = this.openModal.bind(this);
+    // this.afterOpenModal = this.afterOpenModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.OnTxIsSent = this.OnTxIsSent.bind(this);
   }
 
-  txIsSent = () => {
-    this.setState({ txSent: this.state.txSent + 1 })
-  }
+    OnTxIsSent() {
+    this.setState({ txSent: this.state.txSent + 1 }, () => {
+      if (this.state.txSent == this.state.numChunks) {
+        this.setState({
+          assetPair: "ARENA.ETH/ARENA.USDT",
+          amount:'',
+          price:'',
+          markets: [],
+          total: '',
+          isSendingTx: false,
+          numChunks: 10,
+          txSent: 0
+        })
+      }
+    });
+  
+  };
   handleAlgoOrder(type) {
+    const {assetPair, amount, price, numChunks} = this.state;
+    const {user, onLogout} = this.props;
+    this.openModal();
     switch (type) {
       case "sell":
         sellAlgoOrder(
-          this.state.assetPair,
-          this.state.amount,
-          this.state.price,
-          this.state.numChunks,
-          this.props.user
-        )
+          assetPair,
+          amount,
+          price,
+          numChunks,
+          user,
+          this.OnTxIsSent,
+          onLogout
+        );
+        break;
+
       case "buy":
         buyAlgoOrder(
-          this.state.assetPair,
-          this.state.amount,
-          this.state.price,
-          this.state.numChunks,
-          this.props.user,
-          this.props.onLogout
-        )
+          assetPair,
+          amount,
+          price,
+          numChunks,
+          user,
+          this.OnTxIsSent,
+          onLogout
+        );
+        break;
+        
       default:
     }
   }
@@ -56,10 +81,10 @@ class OrderOverview extends Component {
     this.setState({ isSendingTx: true })
   }
 
-  afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    this.subtitle.style.color = "#f00"
-  }
+  // afterOpenModal() {
+  //   // references are now sync'd and can be accessed.
+  //   this.subtitle.style.color = "#f00";
+  // }
 
   closeModal() {
     this.setState({ isSendingTx: false })
@@ -193,12 +218,14 @@ class OrderOverview extends Component {
           <div className="actions">
             <button
               className="buy-btn"
+              disabled={!(amount && price)}
               onClick={() => this.handleAlgoOrder("buy")}
             >
               Buy
             </button>
             <button
               className="sell-btn"
+              disabled={!(amount && price)}
               onClick={() => this.handleAlgoOrder("sell")}
             >
               Sell

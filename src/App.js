@@ -42,6 +42,7 @@ class App extends React.Component {
   logout = () => {
     this.setState({ isAuthorized: false });
     localStorage.removeItem("_cybex_dex_user");
+    document.title = 'Algo Manager';
   };
 
   async componentDidMount() {
