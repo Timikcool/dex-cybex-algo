@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import ReactDropdown from 'react-dropdown';
-import Modal from 'react-modal';
-import { Line, Circle } from 'rc-progress';
-import { sellAlgoOrder, buyAlgoOrder, fetchMarkets } from '../services/cybex';
+import React, { Component } from "react";
+import ReactDropdown from "react-dropdown";
+import Modal from "react-modal";
+import { Line, Circle } from "rc-progress";
+import { sellAlgoOrder, buyAlgoOrder, fetchMarkets } from "../services/cybex";
 
-import './OrderOverview.scss';
+import "./OrderOverview.scss";
 
 class OrderOverview extends Component {
   constructor(props) {
@@ -23,70 +23,68 @@ class OrderOverview extends Component {
     document.title = document.title + ` | ${user.username}`;
     this.handleInputChange = this.handleInputChange.bind(this);
     this.openModal = this.openModal.bind(this);
-    this.afterOpenModal = this.afterOpenModal.bind(this);
+    // this.afterOpenModal = this.afterOpenModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
+    this.OnTxIsSent = this.OnTxIsSent.bind(this);
   }
 
-  OnTxIsSent = () => {
-    console.log('complete');
-    this.setState({txSent: this.state.txSent + 1}, () => {
-      if (this.state.txSent === this.state.numChunks) {
-        this.OnComplete();
+    OnTxIsSent() {
+    this.setState({ txSent: this.state.txSent + 1 }, () => {
+      if (this.state.txSent == this.state.numChunks) {
+        this.setState({
+          assetPair: "ARENA.ETH/ARENA.USDT",
+          amount:'',
+          price:'',
+          markets: [],
+          total: '',
+          isSendingTx: false,
+          numChunks: 10,
+          txSent: 0
+        })
       }
-    } );
-  }
-
-  OnComplete() {
-    this.setState({
-      assetPair: "ARENA.ETH/ARENA.USDT",
-      amount:'',
-      price:'',
-      markets: [],
-      total:'',
-      isSendingTx: false,
-      numChunks: 10,
-      txSent: 0
-    })
-  }
-
-
-
+    });
+  
+  };
   handleAlgoOrder(type) {
+    const {assetPair, amount, price, numChunks} = this.state;
+    const {user, onLogout} = this.props;
     this.openModal();
-    try {
-      switch (type) {
-        case "sell":
-          sellAlgoOrder(
-            this.state.assetPair,
-            this.state.amount,
-            this.state.price,
-            10,
-            this.props.user,
-            this.OnTxIsSent.bind(this)
-          );
-        case "buy":
-          buyAlgoOrder(
-            this.state.assetPair,
-            this.state.amount,
-            this.state.price,
-            10,
-            this.props.user
-          );
-        default:
-      }
-    } catch (err) {
-      console.log(err);
-      this.props.onLogout();
+    switch (type) {
+      case "sell":
+        sellAlgoOrder(
+          assetPair,
+          amount,
+          price,
+          numChunks,
+          user,
+          this.OnTxIsSent,
+          onLogout
+        );
+        break;
+
+      case "buy":
+        buyAlgoOrder(
+          assetPair,
+          amount,
+          price,
+          numChunks,
+          user,
+          this.OnTxIsSent,
+          onLogout
+        );
+        break;
+        
+      default:
     }
   }
   openModal() {
     this.setState({ isSendingTx: true });
   }
 
-  afterOpenModal() {
-    // references are now sync'd and can be accessed.
-    this.subtitle.style.color = '#f00';
-  }
+  // afterOpenModal() {
+  //   // references are now sync'd and can be accessed.
+  //   this.subtitle.style.color = "#f00";
+  // }
 
   closeModal() {
     this.setState({ isSendingTx: false });
@@ -107,7 +105,6 @@ class OrderOverview extends Component {
     }
 
     this.setState({ ...this.state, ...newState });
-    
   }
 
   async componentDidMount() {
@@ -121,12 +118,12 @@ class OrderOverview extends Component {
   render() {
     const customModalStyles = {
       content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)'
+        top: "50%",
+        left: "50%",
+        right: "auto",
+        bottom: "auto",
+        marginRight: "-50%",
+        transform: "translate(-50%, -50%)"
       }
     };
     const {
@@ -143,6 +140,13 @@ class OrderOverview extends Component {
     return (
       <div className="order-input-wrapper">
         <div className="order-input">
+          <button
+            className="logout-button"
+            onClick={() => this.props.onLogout()}
+          >
+            Logout
+          </button>
+          <br />
           <h1> Buy and Sell</h1>
           <div className="input-wrapper">
             {markets && (
@@ -216,7 +220,11 @@ class OrderOverview extends Component {
           contentLabel="Sending Transactions"
         >
           <div className="counter">{`${txSent} / ${numChunks}`}</div>
-          <Circle percent={(txSent / numChunks) * 100} strokeWidth="4" strokeColor="#ff9143" />
+          <Circle
+            percent={(txSent / numChunks) * 100}
+            strokeWidth="4"
+            strokeColor="#ff9143"
+          />
         </Modal>
       </div>
     );

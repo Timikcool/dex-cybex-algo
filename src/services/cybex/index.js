@@ -39,7 +39,9 @@ export const sellAlgoOrder = async (
   amount,
   price,
   numChunks,
-  user
+  user,
+  callback,
+  logout
 ) => {
   const cybex = new Cybex();
   console.log("sellAlgoOrder");
@@ -53,12 +55,18 @@ export const sellAlgoOrder = async (
           price
         );
         console.log(res);
+        if (!res) {
+          i--;
+        } else {
+          callback();
+        }
       }
     })
     .catch(err => {
       console.log("ERROR signing:", err);
-      if (err === "You need to provide credentials for signing") {
-        throw err;
+      if (err.message === "You need to provide credentials for signing") {
+        console.log(err.message);
+        logout();
       }
     });
 };
@@ -69,7 +77,8 @@ export const buyAlgoOrder = async (
   price,
   numChunks,
   user,
-  callback
+  callback,
+  logout
 ) => {
   const cybex = new Cybex();
   console.log("buyAlgoOrder");
@@ -91,5 +100,9 @@ export const buyAlgoOrder = async (
     })
     .catch(err => {
       console.log("ERROR signing:", err);
+      if (err.message === "You need to provide credentials for signing") {
+        console.log(err.message);
+        logout();
+      }
     });
 };

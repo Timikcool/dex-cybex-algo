@@ -18,7 +18,7 @@ class App extends React.Component {
     };
   }
 
-  auth = (username, password) => {
+  auth = async (username, password) => {
     try {
       const cybex = new Cybex();
       await cybex.setSigner({ accountName: username, password: password });
@@ -41,6 +41,8 @@ class App extends React.Component {
 
   logout = () => {
     this.setState({ isAuthorized: false });
+    localStorage.removeItem("_cybex_dex_user");
+    document.title = 'Algo Manager';
   };
 
   async componentDidMount() {
