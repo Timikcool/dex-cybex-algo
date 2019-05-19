@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import ReactDropdown from 'react-dropdown';
-import Modal from 'react-modal';
-import { Line, Circle } from 'rc-progress';
-import { sellAlgoOrder, buyAlgoOrder, fetchMarkets } from '../services/cybex';
+import React, { Component } from "react";
+import ReactDropdown from "react-dropdown";
+import Modal from "react-modal";
+import { Line, Circle } from "rc-progress";
+import { sellAlgoOrder, buyAlgoOrder, fetchMarkets } from "../services/cybex";
 
-import './OrderOverview.scss';
+import "./OrderOverview.scss";
 
 class OrderOverview extends Component {
   constructor(props) {
@@ -28,8 +28,8 @@ class OrderOverview extends Component {
   }
 
   txIsSent = () => {
-    this.setState({txSent: this.state.txSent + 1});
-  }
+    this.setState({ txSent: this.state.txSent + 1 });
+  };
   handleAlgoOrder(type) {
     switch (type) {
       case 'sell':
@@ -46,7 +46,8 @@ class OrderOverview extends Component {
           this.state.amount,
           this.state.price,
           this.state.numChunks,
-          this.props.user
+          this.props.user,
+          this.props.onLogout
         );
       default:
     }
@@ -57,7 +58,7 @@ class OrderOverview extends Component {
 
   afterOpenModal() {
     // references are now sync'd and can be accessed.
-    this.subtitle.style.color = '#f00';
+    this.subtitle.style.color = "#f00";
   }
 
   closeModal() {
@@ -79,7 +80,6 @@ class OrderOverview extends Component {
     }
 
     this.setState({ ...this.state, ...newState });
-    
   }
 
   async componentDidMount() {
@@ -93,12 +93,12 @@ class OrderOverview extends Component {
   render() {
     const customModalStyles = {
       content: {
-        top: '50%',
-        left: '50%',
-        right: 'auto',
-        bottom: 'auto',
-        marginRight: '-50%',
-        transform: 'translate(-50%, -50%)'
+        top: "50%",
+        left: "50%",
+        right: "auto",
+        bottom: "auto",
+        marginRight: "-50%",
+        transform: "translate(-50%, -50%)"
       }
     };
     const {
@@ -115,6 +115,13 @@ class OrderOverview extends Component {
     return (
       <div className="order-input-wrapper">
         <div className="order-input">
+          <button
+            className="logout-button"
+            onClick={() => this.props.onLogout()}
+          >
+            Logout
+          </button>
+          <br />
           <h1> Buy and Sell</h1>
 
           <div className="input-wrapper">
@@ -207,7 +214,11 @@ class OrderOverview extends Component {
           contentLabel="Sending Transactions"
         >
           <div className="counter">{`${txSent} / ${numChunks}`}</div>
-          <Circle percent={(txSent / numChunks) * 100} strokeWidth="4" strokeColor="#ff9143" />
+          <Circle
+            percent={(txSent / numChunks) * 100}
+            strokeWidth="4"
+            strokeColor="#ff9143"
+          />
         </Modal>
       </div>
     );
