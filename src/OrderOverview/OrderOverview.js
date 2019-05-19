@@ -1,15 +1,15 @@
-import React, { Component } from "react";
-import ReactDropdown from "react-dropdown";
-import Modal from "react-modal";
-import { Line, Circle } from "rc-progress";
-import { sellAlgoOrder, buyAlgoOrder, fetchMarkets } from "../services/cybex";
+import React, { Component } from "react"
+import ReactDropdown from "react-dropdown"
+import Modal from "react-modal"
+import { Line, Circle } from "rc-progress"
+import { sellAlgoOrder, buyAlgoOrder, fetchMarkets } from "../services/cybex"
 
-import "./OrderOverview.scss";
+import "./OrderOverview.scss"
 
 class OrderOverview extends Component {
   constructor(props) {
-    super(props);
-    const { amount, price, user } = props;
+    super(props)
+    const { amount, price, user } = props
     this.state = {
       assetPair: "ARENA.ETH/ARENA.USDT",
       amount,
@@ -18,29 +18,29 @@ class OrderOverview extends Component {
       total: props.amount * props.price,
       isSendingTx: false,
       numChunks: 10,
-      txSent: 0
-    };
-    document.title = document.title + ` | ${user.username}`;
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.openModal = this.openModal.bind(this);
-    this.afterOpenModal = this.afterOpenModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
+      txSent: 0,
+    }
+    document.title = document.title + ` | ${user.username}`
+    this.handleInputChange = this.handleInputChange.bind(this)
+    this.openModal = this.openModal.bind(this)
+    this.afterOpenModal = this.afterOpenModal.bind(this)
+    this.closeModal = this.closeModal.bind(this)
   }
 
   txIsSent = () => {
-    this.setState({ txSent: this.state.txSent + 1 });
-  };
+    this.setState({ txSent: this.state.txSent + 1 })
+  }
   handleAlgoOrder(type) {
     switch (type) {
-      case 'sell':
+      case "sell":
         sellAlgoOrder(
           this.state.assetPair,
           this.state.amount,
           this.state.price,
           this.state.numChunks,
           this.props.user
-        );
-      case 'buy':
+        )
+      case "buy":
         buyAlgoOrder(
           this.state.assetPair,
           this.state.amount,
@@ -48,45 +48,45 @@ class OrderOverview extends Component {
           this.state.numChunks,
           this.props.user,
           this.props.onLogout
-        );
+        )
       default:
     }
   }
   openModal() {
-    this.setState({ isSendingTx: true });
+    this.setState({ isSendingTx: true })
   }
 
   afterOpenModal() {
     // references are now sync'd and can be accessed.
-    this.subtitle.style.color = "#f00";
+    this.subtitle.style.color = "#f00"
   }
 
   closeModal() {
-    this.setState({ isSendingTx: false });
+    this.setState({ isSendingTx: false })
   }
 
   handleInputChange(e) {
-    const { name, value } = e.target;
-    const { amount, price, total } = this.state;
-    const newState = { [name]: parseFloat(value) };
+    const { name, value } = e.target
+    const { amount, price, total } = this.state
+    const newState = { [name]: parseFloat(value) }
     if (name === "price") {
-      newState.total = value * amount;
+      newState.total = value * amount
     }
     if (name === "total") {
-      newState.price = amount / total;
+      newState.price = amount / total
     }
     if (name === "amount") {
-      newState.total = value * price;
+      newState.total = value * price
     }
 
-    this.setState({ ...this.state, ...newState });
+    this.setState({ ...this.state, ...newState })
   }
 
   async componentDidMount() {
     //const orderBook = await getOrderBook("ETH/USDT");
-    const markets = await fetchMarkets();
+    const markets = await fetchMarkets()
     // this.setState({ markets: [{ name: 'ETH/BNC' }, { name: 'LTC/NGR' }] });
-    this.setState({ markets });
+    this.setState({ markets })
     // console.log(markets);
   }
 
@@ -98,9 +98,9 @@ class OrderOverview extends Component {
         right: "auto",
         bottom: "auto",
         marginRight: "-50%",
-        transform: "translate(-50%, -50%)"
-      }
-    };
+        transform: "translate(-50%, -50%)",
+      },
+    }
     const {
       price,
       amount,
@@ -109,8 +109,8 @@ class OrderOverview extends Component {
       isSendingTx,
       txSent,
       numChunks,
-      assetPair
-    } = this.state;
+      assetPair,
+    } = this.state
 
     return (
       <div className="order-input-wrapper">
@@ -138,18 +138,17 @@ class OrderOverview extends Component {
           </div>
 
           <div className="input-wrapper">
-            {(
+            {
               <ReactDropdown
                 onChange={({ value }) => {
                   this.setState({ numChunks: value })
-                  console.log("Changes numChunks to ", this.state.numChunks )
-                }
-                }
+                  console.log("Changes numChunks to ", this.state.numChunks)
+                }}
                 options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
                 placeholder="Select number of chunks"
-                value={this.state.numChunks}
+                value={this.state.numChunks.toString()}
               />
-            )}
+            }
             {/* <span> Price </span> */}
           </div>
 
@@ -221,8 +220,8 @@ class OrderOverview extends Component {
           />
         </Modal>
       </div>
-    );
+    )
   }
 }
 
-export default OrderOverview;
+export default OrderOverview
