@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import ReactDropdown from 'react-dropdown';
+import Modal from 'react-modal';
+import { Line, Circle } from 'rc-progress';
 import { sellAlgoOrder, buyAlgoOrder, fetchMarkets } from '../services/cybex';
 
 import './OrderOverview.scss';
-import ReactDropdown from 'react-dropdown';
 
 class OrderOverview extends Component {
   constructor(props) {
@@ -13,13 +15,23 @@ class OrderOverview extends Component {
       amount,
       price,
       markets: [],
-      total: props.amount * props.price
+      total: props.amount * props.price,
+      isSendingTx: false,
+      numChunks: 10,
+      txSent: 0
     };
-    document.title = document.title + ` | ${user.username}`
+    document.title = document.title + ` | ${user.username}`;
     this.handleInputChange = this.handleInputChange.bind(this);
+    this.openModal = this.openModal.bind(this);
+    this.afterOpenModal = this.afterOpenModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
   }
 
+  txIsSent = () => {
+    this.setState({txSent: this.state.txSent + 1});
+  }
   handleAlgoOrder(type) {
+    this.openModal();
     switch (type) {
       case 'sell':
         sellAlgoOrder(
@@ -41,6 +53,20 @@ class OrderOverview extends Component {
     }
   }
 
+  tx
+  openModal() {
+    this.setState({ isSendingTx: true });
+  }
+
+  afterOpenModal() {
+    // references are now sync'd and can be accessed.
+    this.subtitle.style.color = '#f00';
+  }
+
+  closeModal() {
+    this.setState({ isSendingTx: false });
+  }
+
   handleInputChange(e) {
     const { name, value } = e.target;
     const { amount, price, total } = this.state;
@@ -56,6 +82,7 @@ class OrderOverview extends Component {
     }
 
     this.setState({ ...this.state, ...newState });
+    
   }
 
   async componentDidMount() {
@@ -67,7 +94,26 @@ class OrderOverview extends Component {
   }
 
   render() {
-    const { price, amount, total, markets } = this.state;
+    const customModalStyles = {
+      content: {
+        top: '50%',
+        left: '50%',
+        right: 'auto',
+        bottom: 'auto',
+        marginRight: '-50%',
+        transform: 'translate(-50%, -50%)'
+      }
+    };
+    const {
+      price,
+      amount,
+      total,
+      markets,
+      isSendingTx,
+      txSent,
+      numChunks,
+      assetPair
+    } = this.state;
 
     return (
       <div className="order-input-wrapper">
@@ -78,7 +124,7 @@ class OrderOverview extends Component {
               <ReactDropdown
                 onChange={({ value }) => this.setState({ assetPair: value })}
                 options={markets.map(({ name }) => name)}
-                value={this.state.assetPair}
+                value={assetPair}
                 placeholder="Select trade pair"
               />
             )}
@@ -135,6 +181,16 @@ class OrderOverview extends Component {
             </button>
           </div>
         </div>
+        <Modal
+          isOpen={isSendingTx}
+          onAfterOpen={this.afterOpenModal}
+          onRequestClose={this.closeModal}
+          style={customModalStyles}
+          contentLabel="Sending Transactions"
+        >
+          <div className="counter">{`${txSent} / ${numChunks}`}</div>
+          <Circle percent={(txSent / numChunks) * 100} strokeWidth="4" strokeColor="#ff9143" />
+        </Modal>
       </div>
     );
   }
