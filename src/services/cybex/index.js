@@ -68,7 +68,8 @@ export const buyAlgoOrder = async (
   amount,
   price,
   numChunks,
-  user
+  user,
+  callback
 ) => {
   const cybex = new Cybex();
   console.log("buyAlgoOrder");
@@ -83,6 +84,8 @@ export const buyAlgoOrder = async (
         );
         if (!res) {
           i--;
+        } else {
+          callback();
         }
       }
     })

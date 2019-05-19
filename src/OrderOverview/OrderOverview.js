@@ -27,9 +27,30 @@ class OrderOverview extends Component {
     this.closeModal = this.closeModal.bind(this);
   }
 
-  txIsSent = () => {
-    this.setState({txSent: this.state.txSent + 1});
+  OnTxIsSent = () => {
+    console.log('complete');
+    this.setState({txSent: this.state.txSent + 1}, () => {
+      if (this.state.txSent === this.state.numChunks) {
+        this.OnComplete();
+      }
+    } );
   }
+
+  OnComplete() {
+    this.setState({
+      assetPair: "ARENA.ETH/ARENA.USDT",
+      amount:'',
+      price:'',
+      markets: [],
+      total:'',
+      isSendingTx: false,
+      numChunks: 10,
+      txSent: 0
+    })
+  }
+
+
+
   handleAlgoOrder(type) {
     this.openModal();
     try {
@@ -40,7 +61,8 @@ class OrderOverview extends Component {
             this.state.amount,
             this.state.price,
             10,
-            this.props.user
+            this.props.user,
+            this.OnTxIsSent.bind(this)
           );
         case "buy":
           buyAlgoOrder(
@@ -172,12 +194,14 @@ class OrderOverview extends Component {
           <div className="actions">
             <button
               className="buy-btn"
+              disabled={!(amount && price)}
               onClick={() => this.handleAlgoOrder("buy")}
             >
               Buy
             </button>
             <button
               className="sell-btn"
+              disabled={!(amount && price)}
               onClick={() => this.handleAlgoOrder("sell")}
             >
               Sell
