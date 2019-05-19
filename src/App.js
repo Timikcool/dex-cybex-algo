@@ -18,11 +18,10 @@ class App extends React.Component {
     };
   }
 
-  auth = async (username, password) => {
+  auth = (username, password) => {
     try {
       const cybex = new Cybex();
       await cybex.setSigner({ accountName: username, password: password });
-
       this.setState({
         user: {
           username,
@@ -30,10 +29,14 @@ class App extends React.Component {
         },
         isAuthorized: true
       });
+      localStorage.setItem(
+        "_cybex_dex_user",
+        JSON.stringify({ username, password })
+      );
+      console.log(username, password);
     } catch (err) {
       console.log(err);
     }
-    console.log(username, password);
   };
 
   logout = () => {
@@ -44,6 +47,13 @@ class App extends React.Component {
     //const orderBook = await getOrderBook("ETH/USDT");
     // const markets = await fetchMarkets();
     // this.setState({ markets });
+    if (localStorage.getItem("_cybex_dex_user")) {
+      const user = JSON.parse(localStorage.getItem("_cybex_dex_user"));
+      this.setState({
+        user,
+        isAuthorized: true
+      });
+    }
   }
 
   render() {

@@ -7,7 +7,7 @@ import ReactDropdown from "react-dropdown";
 class OrderOverview extends Component {
   constructor(props) {
     super(props);
-    const { amount, price } = props;
+    const { amount, price, user } = props;
     this.state = {
       assetPair: "ARENA.ETH/ARENA.USDT",
       amount,
@@ -15,7 +15,7 @@ class OrderOverview extends Component {
       markets: [],
       total: props.amount * props.price
     };
-
+    document.title = document.title + ` | ${user.username}`;
     this.handleInputChange = this.handleInputChange.bind(this);
   }
 
@@ -49,7 +49,7 @@ class OrderOverview extends Component {
   handleInputChange(e) {
     const { name, value } = e.target;
     const { amount, price, total } = this.state;
-    const newState = { [name]: value };
+    const newState = { [name]: parseFloat(value) };
     if (name === "price") {
       newState.total = value * amount;
     }
@@ -60,7 +60,7 @@ class OrderOverview extends Component {
       newState.total = value * price;
     }
 
-    this.setState(newState);
+    this.setState({ ...this.state, ...newState });
   }
 
   async componentDidMount() {
@@ -81,8 +81,9 @@ class OrderOverview extends Component {
           <div className="input-wrapper">
             {markets && (
               <ReactDropdown
-                onChange={this._onSelect}
+                onChange={({ value }) => this.setState({ assetPair: value })}
                 options={markets.map(({ name }) => name)}
+                value={this.state.assetPair}
                 placeholder="Select trade pair"
               />
             )}
