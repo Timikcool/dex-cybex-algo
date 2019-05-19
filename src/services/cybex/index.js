@@ -4,8 +4,6 @@ import { doWhileStatement } from "@babel/types";
 
 // dotenv.config();
 
-
-
 export const fetchMarkets = async () => {
   const cybex = new Cybex();
   const markets = await cybex.fetchMarkets();
@@ -36,22 +34,57 @@ export const getOrderBook = async () => {
   console.log(res);
 };
 
-
-export const sellAlgoOrder = async (assetPair, amount, price, numChunks, user) => {
-  console.log("ENV", user.username, user.password)
+export const sellAlgoOrder = async (
+  assetPair,
+  amount,
+  price,
+  numChunks,
+  user
+) => {
   const cybex = new Cybex();
+  console.log("sellAlgoOrder");
+  cybex
+    .setSigner({ accountName: user.username, password: user.password })
+    .then(async data => {
+      for (var i = 0; i < numChunks; i++) {
+        const res = await cybex.createLimitSellOrder(
+          assetPair,
+          amount / numChunks,
+          price
+        );
+        console.log(res);
+      }
+    })
+    .catch(err => {
+      console.log("ERROR signing:", err);
+    });
+};
 
-  const res = await cybex.setSigner({
-    accountName: user.username,
-    password: user.password
-  });
-
-  console.log("Response after signing:", res)
-
-  for (var i = 0; i < numChunks; i++) {
-    const res = await cybex.createLimitSellOrder(assetPair, amount / numChunks, 2.3)
-    console.log(res)
-  }
-
-}
-
+export const buyAlgoOrder = async (
+  assetPair,
+  amount,
+  price,
+  numChunks,
+  user
+) => {
+  const cybex = new Cybex();
+  console.log("buyAlgoOrder");
+  cybex
+    .setSigner({ accountName: user.username, password: user.password })
+    .then(async data => {
+      for (var i = 0; i < numChunks; i++) {
+        const res = await cybex.createLimitBuyOrder(
+          assetPair,
+          amount / numChunks,
+          price
+        );
+        console.log(res.Status);
+        if (res.Status === "Failed") {
+          i--;
+        }
+      }
+    })
+    .catch(err => {
+      console.log("ERROR signing:", err);
+    });
+};

@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { sellAlgoOrder, fetchMarkets } from '../services/cybex';
+import React, { Component } from "react";
+import { sellAlgoOrder, buyAlgoOrder } from "../services/cybex";
 
 import './OrderOverview.scss';
 import ReactDropdown from 'react-dropdown';
@@ -17,18 +17,28 @@ class OrderOverview extends Component {
     };
 
     this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSellAlgoOrder = this.handleSellAlgoOrder.bind(this);
   }
 
-  handleSellAlgoOrder() {
-    console.log('Called handleSellAlgoOrder');
-    sellAlgoOrder(
-      this.state.assetPair,
-      this.state.amount,
-      this.state.price,
-      10,
-      this.props.user
-    );
+  handleAlgoOrder(type) {
+    switch (type) {
+      case "sell":
+        sellAlgoOrder(
+          this.state.assetPair,
+          this.state.amount,
+          this.state.price,
+          10,
+          this.props.user
+        );
+      case "buy":
+        buyAlgoOrder(
+          this.state.assetPair,
+          this.state.amount,
+          this.state.price,
+          10,
+          this.props.user
+        );
+      default:
+    }
   }
 
   handleInputChange(e) {
@@ -103,9 +113,9 @@ class OrderOverview extends Component {
 
           <br />
 
-          <button>Buy</button>
-          <button onClick={this.handleSellAlgoOrder}>Sell</button>
-        </div>
+        <button onClick={() => this.handleAlgoOrder("buy")}>Buy</button>
+        <button onClick={() => this.handleAlgoOrder("sell")}>Sell</button>
+      </div>
       </div>
     );
   }
