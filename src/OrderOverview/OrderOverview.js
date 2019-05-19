@@ -20,29 +20,27 @@ class OrderOverview extends Component {
   }
 
   handleAlgoOrder(type) {
-    try {
-      switch (type) {
-        case "sell":
-          sellAlgoOrder(
-            this.state.assetPair,
-            this.state.amount,
-            this.state.price,
-            10,
-            this.props.user
-          );
-        case "buy":
-          buyAlgoOrder(
-            this.state.assetPair,
-            this.state.amount,
-            this.state.price,
-            10,
-            this.props.user
-          );
-        default:
-      }
-    } catch (err) {
-      console.log(err);
-      this.props.onLogout();
+    switch (type) {
+      case "sell":
+        sellAlgoOrder(
+          this.state.assetPair,
+          this.state.amount,
+          this.state.price,
+          10,
+          this.props.user,
+          this.props.onLogout
+        );
+
+      case "buy":
+        buyAlgoOrder(
+          this.state.assetPair,
+          this.state.amount,
+          this.state.price,
+          10,
+          this.props.user,
+          this.props.onLogout
+        );
+      default:
     }
   }
 
@@ -78,6 +76,7 @@ class OrderOverview extends Component {
       <div className="order-input-wrapper">
         <div className="order-input">
           <h1> Buy and Sell</h1>
+          <button onClick={() => this.props.onLogout()}> Logout</button>
           <div className="input-wrapper">
             {markets && (
               <ReactDropdown
