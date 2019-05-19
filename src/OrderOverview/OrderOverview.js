@@ -122,8 +122,12 @@ class OrderOverview extends Component {
         left: "50%",
         right: "auto",
         bottom: "auto",
-        marginRight: "-50%",
+        width: '45%',
         transform: "translate(-50%, -50%)",
+        background: '#212939',
+        display: 'flex',
+        border: 'none',
+        flexDirection: 'column'
       },
     }
     const {
@@ -156,7 +160,6 @@ class OrderOverview extends Component {
                 options={markets.map(({ name }) => name)}
                 value={assetPair}
                 placeholder="Select trade pair"
-                value={this.state.assetPair}
               />
             )}
             {/* <span> Price </span> */}
@@ -240,9 +243,9 @@ class OrderOverview extends Component {
           contentLabel="Sending Transactions"
         >
           <div className="counter">{`${txSent} / ${numChunks}`}</div>
-          <Circle
+          <Line
             percent={(txSent / numChunks) * 100}
-            strokeWidth="4"
+            strokeWidth="2"
             strokeColor="#ff9143"
           />
         </Modal>

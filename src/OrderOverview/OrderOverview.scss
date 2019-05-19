@@ -1,10 +1,10 @@
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
 }
 .input-wrapper > span {
@@ -59,7 +59,7 @@ input[type="number"] {
   border-color: white transparent transparent;
   border-style: solid;
   border-width: 5px 5px 0;
-  content: " ";
+  content: ' ';
   display: block;
   /* height: 0; */
   margin-top: -ceil(2.5);
@@ -70,6 +70,7 @@ input[type="number"] {
 }
 .Dropdown-root {
   position: relative;
+  margin: 10px 0;
 }
 .Dropdown-menu {
   max-height: 300px;
@@ -79,6 +80,7 @@ input[type="number"] {
   border-bottom-right-radius: 4px;
   position: absolute;
   width: 100%;
+  z-index: 9;
 }
 .Dropdown-control {
   border-radius: 4px;
@@ -121,6 +123,10 @@ input[type="number"] {
       opacity: 0.7;
       cursor: pointer;
     }
+    &[disabled],
+    &:disabled {
+      opacity: 0.5;
+    }
   }
   .buy-btn {
     background: #6dbb49;
@@ -128,4 +134,19 @@ input[type="number"] {
   .sell-btn {
     background: #d24632;
   }
+}
+.counter {
+  display: flex;
+  margin: 15px auto;
+  justify-content: center;
+  align-items: center;
+  /* bottom: 50%; */
+  font-size: 25px;
+  color: white;
+}
+.rc-progress-circle {
+  position: relative;
+}
+.ReactModal__Overlay {
+  background-color: rgba(1, 1, 1, 0.75) !important;
 }

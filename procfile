@@ -1,2 +1,2 @@
 react: react-scripts start
-electron: node src/electron-wait-react
+electron:  node src/electron-wait-react NODE_ENV=development 
