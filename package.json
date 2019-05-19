@@ -18,7 +18,8 @@
     "websocket": "^1.0.28"
   },
   "scripts": {
-    "start": "nf start",
+    "start": "npm run electron",
+    "dev": "NODE_ENV=development npm run electron",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

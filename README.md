@@ -20,6 +20,10 @@ Provide a userfriendly way to reduce big orders to multiple smaller ones. The pr
 * select buy or sell
 * profit
 
+# Implemented Algorithm
+
+[VWAP](https://empirica.io/strategies-catalog/vwap)
+
 # Setup
 
 * git clone https://github.com/Timikcool/dex-cybex-algo
