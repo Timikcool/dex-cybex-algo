@@ -75,8 +75,14 @@ class OrderOverview extends Component {
     return (
       <div className="order-input-wrapper">
         <div className="order-input">
+          <button
+            className="logout-button"
+            onClick={() => this.props.onLogout()}
+          >
+            Logout
+          </button>
+          <br />
           <h1> Buy and Sell</h1>
-          <button onClick={() => this.props.onLogout()}> Logout</button>
           <div className="input-wrapper">
             {markets && (
               <ReactDropdown
