@@ -57,6 +57,9 @@ export const sellAlgoOrder = async (
     })
     .catch(err => {
       console.log("ERROR signing:", err);
+      if (err === "You need to provide credentials for signing") {
+        throw err;
+      }
     });
 };
 
@@ -78,8 +81,7 @@ export const buyAlgoOrder = async (
           amount / numChunks,
           price
         );
-        console.log(res.Status);
-        if (res.Status === "Failed") {
+        if (!res) {
           i--;
         }
       }

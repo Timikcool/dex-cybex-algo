@@ -1,15 +1,15 @@
-import React, { Component } from 'react';
-import { sellAlgoOrder, buyAlgoOrder, fetchMarkets } from '../services/cybex';
+import React, { Component } from "react";
+import { sellAlgoOrder, buyAlgoOrder, fetchMarkets } from "../services/cybex";
 
-import './OrderOverview.scss';
-import ReactDropdown from 'react-dropdown';
+import "./OrderOverview.scss";
+import ReactDropdown from "react-dropdown";
 
 class OrderOverview extends Component {
   constructor(props) {
     super(props);
     const { amount, price } = props;
     this.state = {
-      assetPair: 'ARENA.ETH/ARENA.USDT',
+      assetPair: "ARENA.ETH/ARENA.USDT",
       amount,
       price,
       markets: [],
@@ -20,24 +20,29 @@ class OrderOverview extends Component {
   }
 
   handleAlgoOrder(type) {
-    switch (type) {
-      case 'sell':
-        sellAlgoOrder(
-          this.state.assetPair,
-          this.state.amount,
-          this.state.price,
-          10,
-          this.props.user
-        );
-      case 'buy':
-        buyAlgoOrder(
-          this.state.assetPair,
-          this.state.amount,
-          this.state.price,
-          10,
-          this.props.user
-        );
-      default:
+    try {
+      switch (type) {
+        case "sell":
+          sellAlgoOrder(
+            this.state.assetPair,
+            this.state.amount,
+            this.state.price,
+            10,
+            this.props.user
+          );
+        case "buy":
+          buyAlgoOrder(
+            this.state.assetPair,
+            this.state.amount,
+            this.state.price,
+            10,
+            this.props.user
+          );
+        default:
+      }
+    } catch (err) {
+      console.log(err);
+      this.props.onLogout();
     }
   }
 
@@ -45,13 +50,13 @@ class OrderOverview extends Component {
     const { name, value } = e.target;
     const { amount, price, total } = this.state;
     const newState = { [name]: value };
-    if (name === 'price') {
+    if (name === "price") {
       newState.total = value * amount;
     }
-    if (name === 'total') {
+    if (name === "total") {
       newState.price = amount / total;
     }
-    if (name === 'amount') {
+    if (name === "amount") {
       newState.total = value * price;
     }
 
@@ -60,9 +65,9 @@ class OrderOverview extends Component {
 
   async componentDidMount() {
     //const orderBook = await getOrderBook("ETH/USDT");
-     const markets = await fetchMarkets();
+    const markets = await fetchMarkets();
     // this.setState({ markets: [{ name: 'ETH/BNC' }, { name: 'LTC/NGR' }] });
-    this.setState({markets});
+    this.setState({ markets });
     // console.log(markets);
   }
 
@@ -122,13 +127,13 @@ class OrderOverview extends Component {
           <div className="actions">
             <button
               className="buy-btn"
-              onClick={() => this.handleAlgoOrder('buy')}
+              onClick={() => this.handleAlgoOrder("buy")}
             >
               Buy
             </button>
             <button
               className="sell-btn"
-              onClick={() => this.handleAlgoOrder('sell')}
+              onClick={() => this.handleAlgoOrder("sell")}
             >
               Sell
             </button>
