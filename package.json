@@ -19,6 +19,7 @@
   },
   "scripts": {
     "start": "npm run electron",
+    "dev": "NODE_ENV=development npm run electron",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
