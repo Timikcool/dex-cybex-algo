@@ -31,30 +31,24 @@ class OrderOverview extends Component {
     this.setState({txSent: this.state.txSent + 1});
   }
   handleAlgoOrder(type) {
-    this.openModal();
-    try {
-      switch (type) {
-        case "sell":
-          sellAlgoOrder(
-            this.state.assetPair,
-            this.state.amount,
-            this.state.price,
-            10,
-            this.props.user
-          );
-        case "buy":
-          buyAlgoOrder(
-            this.state.assetPair,
-            this.state.amount,
-            this.state.price,
-            10,
-            this.props.user
-          );
-        default:
-      }
-    } catch (err) {
-      console.log(err);
-      this.props.onLogout();
+    switch (type) {
+      case 'sell':
+        sellAlgoOrder(
+          this.state.assetPair,
+          this.state.amount,
+          this.state.price,
+          this.state.numChunks,
+          this.props.user
+        );
+      case 'buy':
+        buyAlgoOrder(
+          this.state.assetPair,
+          this.state.amount,
+          this.state.price,
+          this.state.numChunks,
+          this.props.user
+        );
+      default:
     }
   }
   openModal() {
@@ -122,6 +116,7 @@ class OrderOverview extends Component {
       <div className="order-input-wrapper">
         <div className="order-input">
           <h1> Buy and Sell</h1>
+
           <div className="input-wrapper">
             {markets && (
               <ReactDropdown
@@ -129,10 +124,28 @@ class OrderOverview extends Component {
                 options={markets.map(({ name }) => name)}
                 value={assetPair}
                 placeholder="Select trade pair"
+                value={this.state.assetPair}
               />
             )}
             {/* <span> Price </span> */}
           </div>
+
+          <div className="input-wrapper">
+            {(
+              <ReactDropdown
+                onChange={({ value }) => {
+                  this.setState({ numChunks: value })
+                  console.log("Changes numChunks to ", this.state.numChunks )
+                }
+                }
+                options={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                placeholder="Select number of chunks"
+                value={this.state.numChunks}
+              />
+            )}
+            {/* <span> Price </span> */}
+          </div>
+
           <div className="input-wrapper">
             <input
               type="number"
@@ -142,7 +155,9 @@ class OrderOverview extends Component {
               onChange={this.handleInputChange}
             />
           </div>
+
           <br />
+
           <div className="input-wrapper">
             {/* <span> Amount </span> */}
             <input
