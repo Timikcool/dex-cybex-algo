@@ -246,6 +246,8 @@ class OrderOverview extends Component {
           <Line
             percent={(txSent / numChunks) * 100}
             strokeWidth="2"
+            trailWidth="2"
+            trailColor="black"
             strokeColor="#ff9143"
           />
         </Modal>
