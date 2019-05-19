@@ -18,7 +18,9 @@ class OrderOverview extends Component {
       total: props.amount * props.price,
       isSendingTx: false,
       numChunks: 10,
-      txSent: 0
+      txSent: 0,
+      numMaxOpenOrders: 5,
+      toleratedPriceDifference: 10,
     };
     document.title = document.title + ` | ${user.username}`;
     this.handleInputChange = this.handleInputChange.bind(this);
@@ -28,13 +30,13 @@ class OrderOverview extends Component {
     this.OnTxIsSent = this.OnTxIsSent.bind(this);
   }
 
-    OnTxIsSent() {
+  OnTxIsSent() {
     this.setState({ txSent: this.state.txSent + 1 }, () => {
       if (this.state.txSent == this.state.numChunks) {
         this.setState({
           assetPair: "ARENA.ETH/ARENA.USDT",
-          amount:'',
-          price:'',
+          amount: '',
+          price: '',
           markets: [],
           total: '',
           isSendingTx: false,
@@ -43,11 +45,11 @@ class OrderOverview extends Component {
         })
       }
     });
-  
+
   };
   handleAlgoOrder(type) {
-    const {assetPair, amount, price, numChunks} = this.state;
-    const {user, onLogout} = this.props;
+    const { assetPair, amount, price, numChunks, numMaxOpenOrders, toleratedPriceDifference } = this.state;
+    const { user, onLogout } = this.props;
     this.openModal();
     switch (type) {
       case "sell":
@@ -58,7 +60,10 @@ class OrderOverview extends Component {
           numChunks,
           user,
           this.OnTxIsSent,
-          onLogout
+          onLogout,
+          numMaxOpenOrders,
+          toleratedPriceDifference,
+
         );
         break;
 
@@ -70,10 +75,12 @@ class OrderOverview extends Component {
           numChunks,
           user,
           this.OnTxIsSent,
-          onLogout
+          onLogout,
+          numMaxOpenOrders,
+          toleratedPriceDifference,
         );
         break;
-        
+
       default:
     }
   }

@@ -41,24 +41,29 @@ export const sellAlgoOrder = async (
   numChunks,
   user,
   callback,
-  logout
+  logout,
+  numMaxOpenOrders,
+  toleratedPriceDifference,
 ) => {
   const cybex = new Cybex();
   console.log("sellAlgoOrder");
   cybex
     .setSigner({ accountName: user.username, password: user.password })
     .then(async data => {
-      for (var i = 0; i < numChunks; i++) {
-        const res = await cybex.createLimitSellOrder(
-          assetPair,
-          amount / numChunks,
-          price
-        );
-        console.log(res);
-        if (!res) {
-          i--;
-        } else {
-          callback();
+      for (var i = 0; i < numChunks;) {
+        if (await shouldGenerateNewPosition(assetPair, numMaxOpenOrders, user, price * (1 - toleratedPriceDifference), 10)) {
+          const res = await cybex.createLimitSellOrder(
+            assetPair,
+            amount / numChunks,
+            price
+          );
+          console.log(res);
+          if (!res) {
+            i--;
+          } else {
+            callback();
+          }
+          i++
         }
       }
     })
@@ -77,23 +82,28 @@ export const buyAlgoOrder = async (
   numChunks,
   user,
   callback,
-  logout
+  logout,
+  numMaxOpenOrders,
+  toleratedPriceDifference,
 ) => {
   const cybex = new Cybex();
   console.log("buyAlgoOrder");
   cybex
     .setSigner({ accountName: user.username, password: user.password })
     .then(async data => {
-      for (var i = 0; i < numChunks; i++) {
-        const res = await cybex.createLimitBuyOrder(
-          assetPair,
-          amount / numChunks,
-          price
-        );
-        if (!res) {
-          i--;
-        } else {
-          callback();
+      for (var i = 0; i < numChunks;) {
+        if ( await shouldGenerateNewPosition(assetPair, numMaxOpenOrders, user, price * (1 + toleratedPriceDifference), 10)) {
+          const res = await cybex.createLimitBuyOrder(
+            assetPair,
+            amount / numChunks,
+            price
+          );
+          if (!res) {
+            i--;
+          } else {
+            callback();
+          }
+          i++
         }
       }
     })
@@ -105,3 +115,64 @@ export const buyAlgoOrder = async (
       }
     });
 };
+
+
+
+export const shouldGenerateNewPosition = async (assetPair, numMaxOpenOrders, user, limitPrice, toleratedPriceDifference) => {
+  const cybex = new Cybex();
+
+  toleratedPriceDifference = 10
+  numMaxOpenOrders = 5
+
+  const res = await cybex.setSigner({
+    accountName: user.username,
+    password: user.password
+  });
+
+  // check maximum number of open orders
+  var numOpenOrders = await getNumberOpenOrders(assetPair, user)
+  if (numOpenOrders == -1 || numOpenOrders > numMaxOpenOrders) {
+    console.log("Stop generating new orders, current open orders" + numOpenOrders)
+    return false
+  }
+
+  // check if current price is still a good deal
+  // check if give price is still good
+  var currentPrice = await cybex.fetchBestPrice(assetPair)
+
+  var bigger = limitPrice
+  var smaller = currentPrice
+  if (bigger < smaller) {
+    var tmp = bigger
+    bigger = smaller
+    smaller = tmp
+  }
+
+  if ((bigger - smaller) / bigger > toleratedPriceDifference) {
+    return false
+  }
+
+  return true
+
+}
+
+const getNumberOpenOrders = async function (assetPair, user) {
+  const cybex = new Cybex();
+
+  const res = await cybex.setSigner({
+    accountName: user.username,
+    password: user.password
+  });
+
+  // check maximum number of open orders
+  try {
+    var num = await cybex.fetchOpenOrders(assetPair, user.username);
+    console.log("Num of open orders:", num)
+
+    return num.length
+
+  } catch (err) {
+    console.log("error queying number of open orders:", err)
+    return -1
+  }
+}
